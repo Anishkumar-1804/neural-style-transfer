@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Style Transfer</title>
+    <style>
+        /* General Page Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 30px;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        /* Form Styling */
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+
+        label {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        input[type="file"] {
+            margin-bottom: 15px;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #5c6bc0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #3f51b5;
+        }
+
+        /* Loading Spinner */
+        #loading {
+            display: none;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        #spinner {
+            font-size: 50px;
+        }
+
+        /* Image and Result */
+        #result {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #styledImage {
+            width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Download Button */
+        #download-btn {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #download-btn a button {
+            padding: 10px 20px;
+            background-color: #388e3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #download-btn a button:hover {
+            background-color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Neural Style Transfer</h1>
+        <form id="styleForm" enctype="multipart/form-data">
+            <div>
+                <label for="content_image">Content Image:</label>
+                <input type="file" name="content_image" required><br><br>
+            </div>
+            <div>
+                <label for="style_image">Style Image:</label>
+                <input type="file" name="style_image" required><br><br>
+            </div>
+            <button type="submit">Apply Style</button>
+        </form>
+
+        <!-- Loading Spinner -->
+        <div id="loading">
+            <p>Applying style... Please wait.</p>
+            <div id="spinner">🔄</div>
+        </div>
+
+        <!-- Result Image -->
+        <div id="result">
+            <h3>Styled Image</h3>
+            <img id="styledImage" src="" alt="Styled Image">
+        </div>
+
+        <!-- Download Button -->
+        <div id="download-btn">
+            <a id="downloadLink" href="" download="styled.jpg">
+                <button>Download Styled Image</button>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Handle form submission
+        document.getElementById("styleForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+
+            // Show loading spinner
+            document.getElementById("loading").style.display = "block";
+            document.getElementById("result").style.display = "none";
+            document.getElementById("download-btn").style.display = "none";
+
+            fetch("/apply_style", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "Success") {
+                    // Hide loading spinner and show result
+                    document.getElementById("loading").style.display = "none";
+                    document.getElementById("result").style.display = "block";
+                    document.getElementById("styledImage").src = data.image_url;
+
+                    // Show download button
+                    document.getElementById("download-btn").style.display = "block";
+                    document.getElementById("downloadLink").href = data.image_url;
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred. Please try again.");
+            });
+        });
+    </script>
+</body>
+</html>
