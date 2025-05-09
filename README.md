@@ -1,4 +1,4 @@
-````markdown
+`markdown`
 # 🎨 NeuralStyleTransferApp
 
 A Flask web app that applies neural style transfer to images using a pre-trained VGG19 model. Users upload a content and style image, and the app generates and displays a styled image with an option to download it.
@@ -83,8 +83,8 @@ NeuralStyleTransferApp/
 
 ## 👨‍💻 Author
 
-**Your Name**
-GitHub: [YourUsername](https://github.com/YourUsername)
+Anishkumar K
+GitHub: [Anishkumar-1804](https://github.com/Anishkumar-1804)
 
 ---
 
